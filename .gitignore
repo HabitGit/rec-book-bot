@@ -1,4 +1,6 @@
 /bot-server/node_modules
 /api-server/node_modules
 
+.env
 /bot-server/.env
+/database/.env
