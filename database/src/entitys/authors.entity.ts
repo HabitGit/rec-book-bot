@@ -1,49 +1,51 @@
-import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
-import {Books} from "./books.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Authors {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({
-        type: 'numeric',
-        unique: true,
-        nullable: false,
-    })
-    litresId: number;
+  @Column({
+    type: 'numeric',
+    unique: true,
+    nullable: false,
+  })
+  litresId: number;
 
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    firstName: string;
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  firstName: string;
 
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    lastName: string;
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  lastName: string;
 
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    fullName: string;
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  fullName: string;
 
-    @Column({
-        type: 'varchar',
-        unique: true,
-        nullable: false,
-    })
-    url: string;
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: false,
+  })
+  url: string;
 
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    pictures: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @ManyToMany(() => Books)
-    books: Books[];
+  @UpdateDateColumn()
+  updateAt: Date;
 }
