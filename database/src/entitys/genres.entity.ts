@@ -1,14 +1,21 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Genres {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({
-        type: 'varchar',
-        unique: true,
-        nullable: false,
-    })
-    name: string;
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: false,
+  })
+  name: string;
+
+  @Column({
+    type: 'varchar',
+    unique: true,
+    nullable: false,
+  })
+  genreCod: string;
 }
