@@ -3,7 +3,7 @@ import { Books } from '../entitys/books.entity';
 import { CreateBookDto, UpdateBookDto } from '../dto/books.dto';
 
 export class BooksRepository extends Repository<Books> {
-  constructor(dataSource: DataSource) {
+  constructor(private dataSource: DataSource) {
     super(Books, dataSource.createEntityManager());
   }
 

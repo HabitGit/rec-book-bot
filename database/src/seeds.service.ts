@@ -32,7 +32,7 @@ export class DatabaseFiller {
     for (const book of dataObject) {
       try {
         const genreId: Genres | null =
-          await this.genresRepository.getGenreByCod(book.mainGenre);
+          await this.genresRepository.getGenreIdByCodOrId(book.mainGenre);
 
         // Дата для БД книг
         const bookData: CreateBookDto = {
