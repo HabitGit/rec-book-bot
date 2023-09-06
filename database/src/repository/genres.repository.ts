@@ -7,15 +7,21 @@ export class GenresRepository extends Repository<Genres> {
     super(Genres, dataSource.createEntityManager());
   }
 
-  async getGenreByCod(genreCod: string) {
+  async getGenreIdByCodOrId(genreData: string | number) {
+    const findOptions =
+      typeof genreData === 'string'
+        ? { genreCod: genreData }
+        : { id: genreData };
     return this.findOne({
-      where: { genreCod: genreCod },
+      where: findOptions,
     });
   }
 
   async createGenre(genreData: CreateGenreDto[]) {
     for (const genre of genreData) {
-      const isGenre: Genres | null = await this.getGenreByCod(genre.genreCod);
+      const isGenre: Genres | null = await this.getGenreIdByCodOrId(
+        genre.genreCod,
+      );
       if (isGenre) throw new Error('Такой жанр уже существует');
       if (!isGenre) {
         try {
