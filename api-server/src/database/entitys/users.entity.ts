@@ -3,11 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinTable,
-  ManyToMany, OneToMany,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from "typeorm";
-import { UsersGenres } from "./users-genres.entity";
+  UpdateDateColumn,
+} from 'typeorm';
+import { UsersGenres } from './users-genres.entity';
 
 @Entity()
 export class Users {
