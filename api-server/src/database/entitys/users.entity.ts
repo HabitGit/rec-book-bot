@@ -3,10 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   JoinTable,
-  ManyToMany,
+  ManyToMany, OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from "typeorm";
+import { UsersGenres } from "./users-genres.entity";
 
 @Entity()
 export class Users {
@@ -43,6 +44,9 @@ export class Users {
   @ManyToMany(() => Users)
   @JoinTable()
   friends: Users[];
+
+  @OneToMany(() => UsersGenres, (userGenre) => userGenre.user)
+  preferenceGenre: UsersGenres[];
 
   @CreateDateColumn()
   createdAt: Date;

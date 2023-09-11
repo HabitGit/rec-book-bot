@@ -13,9 +13,9 @@ export class UsersGenres {
   })
   preferenceLevel: number;
 
-  @ManyToOne(() => Users, (user) => user.userId)
-  userId: number;
+  @ManyToOne(() => Users, (user) => user.preferenceGenre)
+  user: Users;
 
-  @ManyToOne(() => Genres, (genre) => genre.id)
-  genreId: number;
+  @ManyToOne(() => Genres, (genre) => genre.preferenceUser)
+  genre: Genres;
 }

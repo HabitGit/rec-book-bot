@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UsersGenres } from './users-genres.entity';
 
 @Entity()
 export class Genres {
@@ -18,4 +19,7 @@ export class Genres {
     nullable: false,
   })
   genreCod: string;
+
+  @OneToMany(() => UsersGenres, (userGenre) => userGenre.genre)
+  preferenceUser: UsersGenres[];
 }
