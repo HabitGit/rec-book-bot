@@ -1,4 +1,6 @@
 Users module:
+
+registration:
     /registration
         req:
         POST {
@@ -14,5 +16,42 @@ Users module:
         422 - Такой юзер уже зарегистрирован
         500 - Ошибка сервера
 
-Books service:
+Add friend:
+    /profile/:id/friends
+    req:
+    POST: {
+             friendId: 1
+          }
+    res:
+    STATUS: 201 - create
+    bad res:
+    400 - Bad request,
+    422 - Такой юзер не зарегистрирован
+    401 - unauthorized,
+    500 - server error
 
+My books/friends:
+    /profile/:id/books(/friends)
+    req:
+    GET
+    res:
+    STATUS: 200 - OK
+    bad res:
+    400 - Bad request
+    401- unauthorized
+    500 - server error
+
+Books service:
+Like/dislike:
+    /books/:id
+    req:
+    POST {
+            userId: 1,
+            preference: true\false
+         }
+    res:
+    STATUS: 200 - OK
+    bad res:
+    400 - bad request,
+    401 - unauthorized,
+    500 - server error
