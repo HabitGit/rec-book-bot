@@ -1,7 +1,7 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Raw, Repository } from 'typeorm';
 import { Users } from '../entitys/users.entity';
-import { CreateUserDto } from '../dto/users.dto';
-import { Injectable } from '@nestjs/common';
+import { AddFriendDto, CreateUserDto } from '../dto/users.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository extends Repository<Users> {
@@ -13,8 +13,20 @@ export class UsersRepository extends Repository<Users> {
     const isUser: Users | null = await this.findOne({
       where: { userId: userData.userId },
     });
-    if (isUser) throw new Error('Такой юзер уже существует');
-    return this.save(userData);
+    if (isUser)
+      throw new HttpException(
+        'Такой юзер уже существует',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    try {
+      const newUser: Users = await this.save(userData);
+      return newUser;
+    } catch (e) {
+      throw new HttpException(
+        `Невалидные данные: ${e.message.slice(0, 25)}...`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async getUser(userId: number): Promise<Users> {
@@ -35,16 +47,31 @@ export class UsersRepository extends Repository<Users> {
     return isUser;
   }
 
-  async addFriend(userId: number, friendId: number): Promise<Users> {
+  async addFriend(friendsData: AddFriendDto): Promise<Users> {
     const isUser: Users | null = await this.findOne({
       relations: { friends: true },
-      where: { userId: userId },
+      where: { userId: friendsData.userId },
     });
-    if (!isUser) throw new Error('Вы не зарегистрированы');
+    if (!isUser)
+      throw new HttpException(
+        'Вы не зарегистрированы',
+        HttpStatus.UNAUTHORIZED,
+      );
+
     const isFriend: Users | null = await this.findOne({
-      where: { userId: friendId },
+      relations: { friends: true },
+      where: { userId: friendsData.friendId },
     });
-    if (!isFriend) throw new Error('Друг не зарегистрирован');
+    if (!isFriend)
+      throw new HttpException(
+        'Друг не зарегистрирован',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+
+    await this.save({
+      ...isFriend,
+      friends: [...isFriend.friends, isUser],
+    });
     return this.save({
       ...isUser,
       friends: [...isUser.friends, isFriend],

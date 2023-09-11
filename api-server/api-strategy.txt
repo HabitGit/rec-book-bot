@@ -1,6 +1,6 @@
 Users module:
 
-registration:
+registration: +
     /registration
         req:
         POST {
@@ -17,10 +17,11 @@ registration:
         500 - Ошибка сервера
 
 Add friend:
-    /profile/:id/friends
+    /profile/friends
     req:
     POST: {
-             friendId: 1
+             userId: 1,
+             friendId: 2
           }
     res:
     STATUS: 201 - create
@@ -29,6 +30,16 @@ Add friend:
     422 - Такой юзер не зарегистрирован
     401 - unauthorized,
     500 - server error
+
+profile:
+    /profile/:id
+    req:
+    GET
+    res: {
+            Name: name,
+            preference_genre: genre_name,
+            invite_link: link
+         }
 
 My books/friends:
     /profile/:id/books(/friends)

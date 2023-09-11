@@ -16,5 +16,6 @@ import { UsersGenresRepository } from './repository/users-genres.repository';
     UsersRepository,
     UsersGenresRepository,
   ],
+  exports: [UsersRepository, UsersGenresRepository],
 })
 export class DatabaseModule {}
