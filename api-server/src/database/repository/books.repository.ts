@@ -1,7 +1,9 @@
 import { DataSource, Repository } from 'typeorm';
 import { Books } from '../entitys/books.entity';
 import { CreateBookDto, UpdateBookDto } from '../dto/books.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BooksRepository extends Repository<Books> {
   constructor(private dataSource: DataSource) {
     super(Books, dataSource.createEntityManager());
