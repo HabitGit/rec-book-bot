@@ -4,10 +4,13 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Authors } from './authors.entity';
+import { UsersBooks } from './users-books.entity';
+import { Users } from './users.entity';
 
 @Entity()
 export class Books {
@@ -63,6 +66,9 @@ export class Books {
   @ManyToMany(() => Authors)
   @JoinTable()
   authors: Authors[];
+
+  @OneToMany(() => UsersBooks, (userBook) => userBook.book)
+  users: Users[];
 
   @CreateDateColumn()
   createdAt: Date;

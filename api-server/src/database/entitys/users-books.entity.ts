@@ -13,9 +13,9 @@ export class UsersBooks {
   })
   preference: boolean;
 
-  @ManyToOne(() => Users, (user) => user.userId)
-  userId: number;
+  @ManyToOne(() => Users, (user) => user.likes)
+  user: Users;
 
-  @ManyToOne(() => Books, (book) => book.id)
-  bookId: number;
+  @ManyToOne(() => Books, (book) => book.users)
+  book: Books;
 }

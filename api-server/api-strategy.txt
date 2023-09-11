@@ -1,0 +1,18 @@
+Users module:
+    /registration
+        req:
+        POST {
+                userId: 1,
+                chatId: 1,
+                name: name,
+                inviteLink: link
+             }
+        res:
+        STATUS 201 - created
+        bad res:
+        400 - Невалидные данные
+        422 - Такой юзер уже зарегистрирован
+        500 - Ошибка сервера
+
+Books service:
+

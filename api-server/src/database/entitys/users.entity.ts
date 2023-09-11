@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UsersGenres } from './users-genres.entity';
+import { UsersBooks } from './users-books.entity';
 
 @Entity()
 export class Users {
@@ -48,6 +49,9 @@ export class Users {
 
   @OneToMany(() => UsersGenres, (userGenre) => userGenre.user)
   preferenceGenre: UsersGenres[];
+
+  @OneToMany(() => UsersBooks, (userBook) => userBook.user)
+  likes: UsersBooks[];
 
   @CreateDateColumn()
   createdAt: Date;
