@@ -41,7 +41,7 @@ profile: +
             invite_link: link
          }
 
-My books/friends:
+My books/friends: +
     /profile/:id/books(/friends)
     req:
     GET
