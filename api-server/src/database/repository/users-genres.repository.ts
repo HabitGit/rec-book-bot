@@ -1,6 +1,8 @@
 import { DataSource, Repository } from 'typeorm';
 import { UsersGenres } from '../entitys/users-genres.entity';
 import { Injectable } from '@nestjs/common';
+import { Users } from '../entitys/users.entity';
+import { Genres } from '../entitys/genres.entity';
 
 @Injectable()
 export class UsersGenresRepository extends Repository<UsersGenres> {
@@ -16,4 +18,11 @@ export class UsersGenresRepository extends Repository<UsersGenres> {
   //   if (!isGenre) throw new Error('Такой юзер скорее всего не зарегистрирован');
   //   return isGenre;
   // }
+
+  async createPreference(user: Users, genre: Genres) {
+    await this.save({
+      user: user,
+      genre: genre,
+    });
+  }
 }
