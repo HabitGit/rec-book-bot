@@ -9,7 +9,7 @@ export class GenresRepository extends Repository<Genres> {
     super(Genres, dataSource.createEntityManager());
   }
 
-  async getGenreIdByCodOrId(genreData: string | number) {
+  async getGenreByCodOrId(genreData: string | number) {
     const findOptions =
       typeof genreData === 'string'
         ? { genreCod: genreData }
@@ -21,7 +21,7 @@ export class GenresRepository extends Repository<Genres> {
 
   async createGenre(genreData: CreateGenreDto[]) {
     for (const genre of genreData) {
-      const isGenre: Genres | null = await this.getGenreIdByCodOrId(
+      const isGenre: Genres | null = await this.getGenreByCodOrId(
         genre.genreCod,
       );
       if (isGenre) throw new Error('Такой жанр уже существует');

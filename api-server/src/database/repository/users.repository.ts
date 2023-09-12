@@ -31,9 +31,21 @@ export class UsersRepository extends Repository<Users> {
 
   async getUser(userId: number): Promise<Users> {
     const isUser: Users | null = await this.findOne({
-      where: { userId: userId },
+      relations: { preferenceGenre: true },
+      where: {
+        userId: userId,
+        preferenceGenre: {
+          preferenceLevel: Raw(
+            `(SELECT MAX("preferenceLevel") FROM "users_genres")`,
+          ),
+        },
+      },
     });
-    if (!isUser) throw new Error('Юзер не зарегистрирован');
+    if (!isUser)
+      throw new HttpException(
+        'Юзер не зарегистрирован',
+        HttpStatus.UNAUTHORIZED,
+      );
     return isUser;
   }
 
