@@ -1,17 +1,40 @@
-import TelegramBot from 'node-telegram-bot-api';
 import { config } from 'dotenv';
 import * as path from 'path';
+import { BotService } from './bot/bot.service';
+import { Commands } from './bot/commands';
+import { ConfigEnv } from './config/config-env';
+import { MessageController } from './bot/controllers/message-controller';
+import { Helper } from './templates/helper';
+import { UsersService } from './users/users.service';
 
 const envPath: string = path.join(__dirname + '/../../.env');
 config({
   path: envPath,
 });
 
-const TOKEN: string | undefined = process.env.TOKEN;
-if (!TOKEN) throw new Error('Нету токена');
+export class Main {
+  constructor(
+    private botService: BotService,
+    private messageController: MessageController,
+  ) {}
 
-const Bot: TelegramBot = new TelegramBot(TOKEN, { polling: true });
+  async botOn() {
+    await this.botService.setMyCommands(Commands);
+    await this.botService.messageListenerOn(
+      this.messageController.requestHandler,
+    );
+  }
+}
 
-Bot.on('message', async (msg) => {
-  await Bot.sendMessage(msg.chat.id, 'Hello!');
-});
+const helper = new Helper();
+const configService = new ConfigEnv();
+const botService = new BotService(configService);
+const usersService = new UsersService();
+const messageController = new MessageController(
+  helper,
+  botService,
+  usersService,
+);
+const main = new Main(botService, messageController);
+
+main.botOn();
