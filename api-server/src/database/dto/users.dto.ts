@@ -18,11 +18,13 @@ export class AddFriendDto {
   friendId: number;
 }
 
-export class UserProfileDto {
-  @IsString()
-  name: string;
-  @IsString()
-  preferenceGenre: string;
-  @IsString()
-  inviteLink: string;
+export enum ProfileTypeEnum {
+  profile = 'profile',
+  books = 'books',
+  friends = 'friends',
+}
+
+export class ProfileTypeDto {
+  @IsEnum(ProfileTypeEnum)
+  type: ProfileTypeEnum;
 }

@@ -16,7 +16,7 @@ registration: +
         422 - Такой юзер уже зарегистрирован
         500 - Ошибка сервера
 
-Add friend:
+Add friend: +
     /profile/friends
     req:
     POST: {
@@ -31,7 +31,7 @@ Add friend:
     401 - unauthorized,
     500 - server error
 
-profile:
+profile: +
     /profile/:id
     req:
     GET

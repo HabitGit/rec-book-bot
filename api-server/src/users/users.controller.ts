@@ -8,7 +8,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AddFriendDto, CreateUserDto } from '../database/dto/users.dto';
+import {
+  AddFriendDto,
+  CreateUserDto,
+  ProfileTypeDto,
+} from '../database/dto/users.dto';
 import { Users } from '../database/entitys/users.entity';
 
 @Controller('users')
@@ -29,8 +33,11 @@ export class UsersController {
     return this.usersService.addFriend(friendsData);
   }
 
-  @Get('/profile/:id')
-  async getProfile(@Param('id', ParseIntPipe) userId: number): Promise<Users> {
-    return this.usersService.getProfile(userId);
+  @Post('/profile/:id')
+  async getProfileData(
+    @Param('id', ParseIntPipe) userId: number,
+    @Body(ValidationPipe) profileType: ProfileTypeDto,
+  ) {
+    return this.usersService.getProfile(userId, profileType);
   }
 }
