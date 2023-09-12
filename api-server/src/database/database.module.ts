@@ -6,6 +6,8 @@ import { BooksRepository } from './repository/books.repository';
 import { GenresRepository } from './repository/genres.repository';
 import { UsersRepository } from './repository/users.repository';
 import { UsersGenresRepository } from './repository/users-genres.repository';
+import { DatabaseService } from './database.service';
+import { DatabaseController } from './database.controller';
 
 @Module({
   imports: [TypeOrmModule.forRoot(DB_OPTIONS)],
@@ -15,7 +17,9 @@ import { UsersGenresRepository } from './repository/users-genres.repository';
     GenresRepository,
     UsersRepository,
     UsersGenresRepository,
+    DatabaseService,
   ],
-  exports: [UsersRepository, UsersGenresRepository],
+  exports: [UsersRepository, UsersGenresRepository, GenresRepository],
+  controllers: [DatabaseController],
 })
 export class DatabaseModule {}
