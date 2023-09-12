@@ -1,4 +1,4 @@
-import { DataSource, Raw, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Users } from '../entitys/users.entity';
 import { AddFriendDto, CreateUserDto } from '../dto/users.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -29,23 +29,19 @@ export class UsersRepository extends Repository<Users> {
     }
   }
 
-  async getUser(userId: number): Promise<Users> {
+  async getUserProfile(userId: number): Promise<Users> {
     const isUser: Users | null = await this.findOne({
-      relations: { preferenceGenre: true },
+      relations: { preferenceGenre: { genre: true } },
       where: {
         userId: userId,
-        preferenceGenre: {
-          preferenceLevel: Raw(
-            `(SELECT MAX("preferenceLevel") FROM "users_genres")`,
-          ),
-        },
       },
     });
-    if (!isUser)
+    if (!isUser) {
       throw new HttpException(
         'Юзер не зарегистрирован',
         HttpStatus.UNAUTHORIZED,
       );
+    }
     return isUser;
   }
 
@@ -88,5 +84,37 @@ export class UsersRepository extends Repository<Users> {
       ...isUser,
       friends: [...isUser.friends, isFriend],
     });
+  }
+
+  async getUserLikesBooks(userId: number) {
+    const isUser: Users | null = await this.findOne({
+      relations: { likes: true },
+      where: {
+        userId: userId,
+      },
+    });
+    if (!isUser) {
+      throw new HttpException(
+        'Юзер не зарегистрирован',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return isUser;
+  }
+
+  async getUserFriends(userId: number) {
+    const isUser: Users | null = await this.findOne({
+      relations: { friends: true },
+      where: {
+        userId: userId,
+      },
+    });
+    if (!isUser) {
+      throw new HttpException(
+        'Юзер не зарегистрирован',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return isUser;
   }
 }
