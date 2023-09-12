@@ -1,0 +1,180 @@
+sf_social:Социально-психологическая фантастика:⚙️ 
+magician_book:Волшебные книги:🔮 
+sf_space:Космическая фантастика:⚙️ 
+sf_cyberpunk:Киберпанк:🛸 
+sf_action:Боевая фантастика:⚙️ 
+sf:Фантастика:⚙️ 
+historical_fantasy:Историческое фэнтези:⚙️ 
+sf_horror:Ужасы:🦠 
+city_fantasy:Городское фэнтези:⚙️ 
+dragon_fantasy:РПГ-фэнтази:⚙️ 
+vampire_book:Вампиры:🕸 
+humor_fantasy:Юмор:😹 
+fantasy_fight:Боевая фэнтези:⚙️ 
+det_crime:Криминальный детектив:🕵️ 
+det_espionage:Шпионский детектив:🕵️ 
+sf_humor:Юморестическая фантастика:⚙️ 
+sf_heroic:Героическая фантастика:⚙️ 
+russian_contemporary:Современная русская литература:📘 
+detective:Детектив:🕵️ 
+foreign_sf:Зарубежная фантастика:⚙️ 
+child_prose:Детская проза:🤔 
+child_adv:Детские приключения:🤠 
+child_sf::Детская фантастика:⚙️ 
+sf_detective:Детективная фантастика:⚙️ 
+literature_19:Литературу XIX века:📜 
+nonf_biography:Биографии и Мемуары:📗 
+sf_history:Альтернативная история:📙 
+child_tale:Детские рассказы:🚼 
+popadanec:Попаданчество:🤠 
+adventure:Приключение:🤠 
+prose_military:Военная проза:🤔 
+det_police:Полицейский детектив:🕵️ 
+humor_prose:Юмористическая проза:😹 
+det_hard:Крутой детектив:🕵️ 
+thriller:Триллер:😱 
+prose_history:Историческая проза:🤔 
+narrative:Наррати́в:🖊 
+adv_maritime:Морские приключения:🤠 
+dramaturgy:Драматургия:🎭 
+children:Дети:🚼 
+adv_history:Альтернативная история:📜 
+det_history:Исторический детектив:🕵️ 
+short_story:Короткая история:📜 
+nonf_publicism:Публицистика:📢 
+foreign_detective:Зарубежные детективы:🕵️ 
+russian_fantasy:Русская фантастика:⚙️ 
+love_detective:Любовные детективы:🕵️ 
+det_irony:Иронический детектив:🕵️ 
+det_action:Боевик:🎬 
+poetry:Поэзия:🕮 
+love_contemporary:Современные любовные романы:💦 
+psy_personal:Самосовершенствование:🆙 
+science:Наука:🥼 
+child_det:Детский детектив:🕵️ 
+prose_counter:Контркультура:䷥ 
+prose_su_classics:Советская классическая проза:🤔 
+home_cooking:Готовка:😋 
+foreign_antique:Антикварные иностранные книги:📕 
+antique_russian:Антикварные русские книги:📕 
+ref_encyc:Энциклопедии:🕮 
+religion_esoterics:Религия и эзотерика:🛸 
+love_history:Истории любви:😘 
+love_short:Короткие любовные истории:😘 
+religion_self:Жизнь и религия:🙏 
+marketing:Маркетинг:🧳 
+home_sex:Домашний секс:🛏️ 
+sci_biology:Биология:🧫 
+child_education:Обучение детей:🚸 
+foreign_contemporary:Зарубежная современная проза:🤔 
+prose_rus_classic:Классическая литература:📘 
+literature_20:Литературу XX века:📜 
+sci_history:История и наука:📙 
+real_estate:Недвижимость:🏘️ 
+home_health:Здоровье и дом:🏡 
+sci_medicine:Наука и медицина:🏥 
+home_pets:Домашние животные:🐕 
+love_fantasy:Любовное фэнтази:⚙️ 
+management:Менеджмент:🧑‍💼 
+religion_rel:Религия:🙏 
+sci_culture:Наука и культура:🕊️ 
+adv_geo:Путешествия и география:🗺️ 
+reference:Справочник:🕮 
+psy_social:Психология отношений:😘 
+sci_politics:Психология и политика:🪧 
+home:Дом:🏠 
+foreign_edu:Зарубежное образование:🏫 
+nonfiction:Документальная проза:🤔 
+org_behavior:Поведение:👺 
+popular_business:Популярно о бизнесе:🧳 
+foreign_prose:Зарубежная классика:👾 
+love_erotica:Любовь и эротика:😘 
+love_sf:Любовная фантастика:⚙️ 
+adv_animal:Природа и животные:🐿️ 
+ref_ref:АТП:🙆 
+humor_anecdote:Юмор и анекдоты:😹 
+foreign_dramaturgy:Зарубежная драматургия:🎭 
+music_dancing:Музыка и танец:💃🏻 
+geo_guides:Географические справочники:🗺️ 
+architecture_book:Архитектурные справочники:🗿 
+job_hunting:Поиск работы:👨‍💻 
+sci_philosophy:Научная философия:📙 
+sketch:Скетч:✏️ 
+home_diy:Домашние поделки:🧵 
+foreign_fantasy:Зарубежная фантастика:🧙‍♂️ 
+sci_tech:Научная фантастика:‎‍💻 
+home_sport:Домашний спорт:⚽️ 
+det_classic:Классический детектив:🕵️ 
+foreign_adventure:Зарубежные приключения:🏔️ 
+home_garden:Дом и сад:🏠 
+psy_sex_and_family:Психология секса и семьи:💏 
+psy_childs:Психология детей:🧒 
+home_entertain:Домашние развлечения:🍿 
+sci_chem:Научная литература о химии:⚗️ 
+foreign_language:Иностранные языки:🕊️ 
+computers:Компьютеры:💻 
+humor:Юмор:😂 
+sci_juris:Юриспруденция:⚖️ 
+prose_classic:Классическая проза:📝 
+economics:Экономика:📈 
+essays:Эссе:✍️ 
+home_crafts:Домашние ремесла:🕰️ 
+sci_linguistic:Научная
+лингвистика:📙 
+religion:Религия:🙏 
+psy alassic:Классическая психология:🧿 
+psy_generic:Общая психология:🧿 
+comp_soft:Компьютерные программы:💻 
+foreign_business:Иностранный бизнес:🧳 
+comp_www:Веб разработка:🕸️ 
+literature_18:Литература XVIII:📜 
+upbringing_book:Воспитание:👺 
+antique_myths:Античные мифы:📜 
+personal_finance:Личные финансы:💸 
+ref_guide:Справочное руководство:📙 
+visual_arts:Изобразительное искусство:🥸 
+sociology_book:Книга по социологии:📙 
+det_political:Политический детектив:🕵️ 
+accounting:Бухгалтерский учет:💸 
+stock:Сток:🏛️ 
+auto_regulations:ПДД:🛑 
+banking:Банковское дело:🏦 
+comp_db:Базы данных:💻 
+sci_religion:Научная религия:🙏 
+global_economy:Макроэкономика:📈 
+pedagogy_book:Педагогическая книга:📙 
+comp_programming:Программирование:🤖 
+sci_phys:Научная физика:🧲 
+paper_work:Оформление документации:🧻 
+sci_math:Научная математика:🧮 
+geography_book:География:🗺️ 
+foreign_children:Иностранные дети:🥸 
+small_business:Малый бизнес:💼 
+military_special:Военное дело:⚔️ 
+comp_osnet:Основы ПК:💻 
+antique_east:Античный восток:🌄 
+comp_hard:Компьютерные книги для продвинутых:💻 
+psy_theraphy:Психотерапия:🧿 
+ref_dict:Словари:📙 
+foreign_love:Иностранные книги о любви:💏 
+antique_ant:Античная антология:📜 
+foreign_home:Зарубежный дом:🏡 
+humor_verse:Юмористический стих:😂 
+antique:Античность:📜 
+nonf_criticism:Критицизм:🥸 
+foreign_publicism:Зарубежная публицистика:🥸 
+foreign_comp:Зарубежные книги о компьютерах:💻 
+foreign_religion:Зарубежная религия:🙏 
+foreign_psychology:Зарубежная психология:🧿 
+child_verse:Детские стихи:🧒 
+aphorism_quote:Цитаты и афоризмы:📜 
+foreign_desc:Иностранные словари:📙 
+antique_european:Античная Европа:📜 
+adv_western:Вестерн:🏜️ 
+sci_business:Научный бизнес:💼 
+industries:Индустрия:🏭 
+foreign_humor:Зарубежный юмор:😂 
+foreign_poetry:Иностранная поэзия:🕮 
+foreign_action:Иностранные боевики:💣 
+cinema_theatre:Театр и кино:🎭 
+sf_fantasy:Научная фантастика:🛸

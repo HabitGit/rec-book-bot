@@ -7,7 +7,7 @@ services:
     image: postgres:15.2
     restart: always
     env_file:
-      - database/.env
+      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -16,3 +16,16 @@ services:
       - ./pg_data:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT_OUTSIDE}:${POSTGRES_PORT_INSIDE}
+
+  api-server:
+    container_name: api-server
+    build: ./api-server
+    env_file:
+      - .env
+    depends_on:
+      - rec_book_bot_database
+    volumes:
+      - /api-server:/app
+      - /api-server/node_modules
+    ports:
+      - ${API_PORT_OUTSIDE}:3000

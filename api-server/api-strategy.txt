@@ -1,0 +1,68 @@
+Users module:
+
+registration: +
+    /registration
+        req:
+        POST {
+                userId: 1,
+                chatId: 1,
+                name: name,
+                inviteLink: link
+             }
+        res:
+        STATUS 201 - created
+        bad res:
+        400 - Невалидные данные
+        422 - Такой юзер уже зарегистрирован
+        500 - Ошибка сервера
+
+Add friend: +
+    /profile/friends
+    req:
+    POST: {
+             userId: 1,
+             friendId: 2
+          }
+    res:
+    STATUS: 201 - create
+    bad res:
+    400 - Bad request,
+    422 - Такой юзер не зарегистрирован
+    401 - unauthorized,
+    500 - server error
+
+profile: +
+    /profile/:id
+    req:
+    GET
+    res: {
+            Name: name,
+            preference_genre: genre_name,
+            invite_link: link
+         }
+
+My books/friends: +
+    /profile/:id/books(/friends)
+    req:
+    GET
+    res:
+    STATUS: 200 - OK
+    bad res:
+    400 - Bad request
+    401- unauthorized
+    500 - server error
+
+Books service:
+Like/dislike:
+    /books/:id
+    req:
+    POST {
+            userId: 1,
+            preference: true\false
+         }
+    res:
+    STATUS: 200 - OK
+    bad res:
+    400 - bad request,
+    401 - unauthorized,
+    500 - server error
