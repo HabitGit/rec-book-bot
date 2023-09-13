@@ -86,7 +86,10 @@ export class MessageController {
             }.\n[Инвайт ссылка](${profile.data.inviteLink})`,
             {
               reply_markup: {
-                keyboard: [[{ text: 'Мои книги' }, { text: 'Мои друзья' }]],
+                keyboard: [
+                  [{ text: 'Мои книги' }, { text: 'Мои друзья' }],
+                  [{ text: 'Назад' }],
+                ],
                 resize_keyboard: true,
               },
               parse_mode: 'Markdown',
@@ -122,7 +125,44 @@ export class MessageController {
         }
         break;
 
-      case '':
+      case 'Мои друзья':
+        const friends = await axios.post(
+          `${API_LINK}/users/profile/${userId}`,
+          {
+            type: 'friends',
+          },
+        );
+        console.log('Friends: ', friends);
+        if (friends.data.friends.length === 0) {
+          return this.botService.sendMessage(
+            chatId,
+            'Вы еще не добавили друзей',
+          );
+        }
+        for (const friend of friends.data.friends) {
+          console.log(friend);
+          /**
+           * Тут будет код с друзьями
+           */
+        }
+        break;
+
+      case 'Назад':
+        return this.botService.sendMessage(chatId, `Главное меню:`, {
+          reply_markup: {
+            keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
+            resize_keyboard: true,
+          },
+          parse_mode: 'Markdown',
+        });
+
+      case 'Подборка книг':
+        // const genres = await axios.
+        // await this.botService.sendMessage(chatId, 'Выберите жанр: ', {
+        //   reply_markup: {
+        //     inline_keyboard:
+        //   }
+        // })
         console.log('Заглушка');
         break;
     }
