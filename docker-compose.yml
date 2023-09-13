@@ -25,7 +25,7 @@ services:
     depends_on:
       - rec_book_bot_database
     volumes:
-      - /api-server:/app
-      - /api-server/node_modules
+      - ./api-server:/app
+      - ./api-server/node_modules
     ports:
       - ${API_PORT_OUTSIDE}:3000
