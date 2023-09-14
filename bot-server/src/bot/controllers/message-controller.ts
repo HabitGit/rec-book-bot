@@ -164,7 +164,7 @@ export class MessageController {
 
         const keyboard = [];
         for (const genre of genres.data) {
-          keyboard.push([{ text: genre.name, callback_data: genre.genreCod }]);
+          keyboard.push([{ text: genre.name, callback_data: genre.id }]);
         }
         keyboard.push([{ text: 'Еще...', callback_data: `more0` }]);
 
@@ -196,7 +196,7 @@ export class MessageController {
 
       const keyboard = [];
       for (const genre of genres.data) {
-        keyboard.push([{ text: genre.name, callback_data: genre.genreCod }]);
+        keyboard.push([{ text: genre.name, callback_data: genre.id }]);
       }
       keyboard.push([{ text: 'Еще...', callback_data: `more${index}` }]);
 
@@ -207,11 +207,41 @@ export class MessageController {
       });
     } else {
       console.log('new query: ', query);
+      const movie = await axios.get(
+        `${API_LINK}/books?page=0&size=1&genreId=${data}`,
+      );
+      console.log('Movie pic: ', movie.data);
+      await this.botService.sendPhoto(chatId!, movie.data[0][0].pictures, {
+        caption: `***${movie.data[0][0].title} ${movie.data[0][0].date} года***\n[Литрес](${movie.data[0][0].url})`,
+        parse_mode: 'MarkdownV2',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: 'like', callback_data: `like,0,${data}` },
+              { text: 'dislike', callback_data: `dislike,0,${data}` },
+            ],
+          ],
+        },
+      });
       await this.botService.queryListenerOn(this.getLikeListener);
       await this.botService.queryListenerOff(this.getGenreListener);
     }
   };
 
   getLikeListener = async (query: TelegramBot.CallbackQuery) => {
-  }
+    const { data, chatId, userId } = this.helper.getUserPointsQuery(query);
+
+    const like = data?.split(',')[0],
+      page = data?.split(',')[1],
+      genreId = data?.split(',')[2];
+
+    switch (like) {
+      case 'like':
+        console.log('заглушка');
+        break;
+      case 'dislike':
+        console.log('заглушка');
+        break;
+    }
+  };
 }
