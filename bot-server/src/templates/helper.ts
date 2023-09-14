@@ -9,4 +9,12 @@ export class Helper {
       message: msg.text,
     };
   }
+
+  getUserPointsQuery(query: TelegramBot.CallbackQuery) {
+    return {
+      data: query.data,
+      chatId: query.message?.chat.id,
+      userId: query.from.id,
+    };
+  }
 }

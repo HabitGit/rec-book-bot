@@ -4,7 +4,8 @@ import { BotService } from '../bot.service';
 import axios from 'axios';
 import { UsersService } from '../../users/users.service';
 
-const API_LINK = 'http://localhost:3000';
+// const API_LINK = 'http://localhost:3000';
+const API_LINK = 'http://api-server:3000';
 
 export class MessageController {
   constructor(
@@ -157,13 +158,22 @@ export class MessageController {
         });
 
       case 'Подборка книг':
-        // const genres = await axios.
-        // await this.botService.sendMessage(chatId, 'Выберите жанр: ', {
-        //   reply_markup: {
-        //     inline_keyboard:
-        //   }
-        // })
-        console.log('Заглушка');
+        const genres = await axios.get(
+          `${API_LINK}/books/genres?page=0&size=10`,
+        );
+
+        const keyboard = [];
+        for (const genre of genres.data) {
+          keyboard.push([{ text: genre.name, callback_data: genre.genreCod }]);
+        }
+        keyboard.push([{ text: 'Еще...', callback_data: `more0` }]);
+
+        await this.botService.sendMessage(chatId, 'Выберите жанр', {
+          reply_markup: {
+            inline_keyboard: keyboard,
+          },
+        });
+        await this.botService.queryListenerOn(this.getGenre);
         break;
     }
 
@@ -173,5 +183,28 @@ export class MessageController {
         console.log('match: ', match[1]);
       },
     );
+  };
+  getGenre = async (query: TelegramBot.CallbackQuery) => {
+    const { data, chatId, userId } = this.helper.getUserPointsQuery(query);
+
+    if (data?.slice(0, 4) === 'more') {
+      console.log('More work: ', data);
+      const index: number = +data.slice(4, 5) + 1;
+      const genres = await axios.get(
+        `${API_LINK}/books/genres?page=${index}&size=10`,
+      );
+
+      const keyboard = [];
+      for (const genre of genres.data) {
+        keyboard.push([{ text: genre.name, callback_data: genre.genreCod }]);
+      }
+      keyboard.push([{ text: 'Еще...', callback_data: `more${index}` }]);
+
+      await this.botService.sendMessage(chatId!, 'Выберите жанр', {
+        reply_markup: {
+          inline_keyboard: keyboard,
+        },
+      });
+    }
   };
 }

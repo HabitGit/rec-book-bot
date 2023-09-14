@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_LINK = 'http://localhost:3000';
+const API_LINK = 'http://api-server:3000';
+// const API_LINK = 'http://localhost:3000';
 
 export class UsersService {
   async checkUser(userId: number) {
