@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { Books } from '../entitys/books.entity';
-import { CreateBookDto, UpdateBookDto } from '../dto/books.dto';
+import { CreateBookDto, FindOptionsDto, UpdateBookDto } from '../dto/books.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -28,6 +28,18 @@ export class BooksRepository extends Repository<Books> {
       authors: updateBookData.authors
         ? [...isBook.authors, ...updateBookData.authors]
         : [...isBook.authors],
+    });
+  }
+
+  async getBooks(findOptions: FindOptionsDto): Promise<[Books[], number]> {
+    const { take, skip, genreId } = findOptions;
+    console.log('Find opt.: ', findOptions);
+    return this.findAndCount({
+      take,
+      skip,
+      where: {
+        genreId,
+      },
     });
   }
 }

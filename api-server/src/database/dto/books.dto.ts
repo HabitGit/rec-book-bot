@@ -59,3 +59,15 @@ export class BookParseDto {
   downloadable: string;
   age: string;
 }
+
+export class BooksQueryDto {
+  page: number;
+  size: number;
+  genreId: number;
+}
+
+export class FindOptionsDto {
+  take?: number;
+  skip?: number;
+  genreId?: number;
+}
