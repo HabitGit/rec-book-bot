@@ -173,7 +173,7 @@ export class MessageController {
             inline_keyboard: keyboard,
           },
         });
-        await this.botService.queryListenerOn(this.getGenre);
+        await this.botService.queryListenerOn(this.getGenreListener);
         break;
     }
 
@@ -184,7 +184,7 @@ export class MessageController {
       },
     );
   };
-  getGenre = async (query: TelegramBot.CallbackQuery) => {
+  getGenreListener = async (query: TelegramBot.CallbackQuery) => {
     const { data, chatId, userId } = this.helper.getUserPointsQuery(query);
 
     if (data?.slice(0, 4) === 'more') {
@@ -205,6 +205,13 @@ export class MessageController {
           inline_keyboard: keyboard,
         },
       });
+    } else {
+      console.log('new query: ', query);
+      await this.botService.queryListenerOn(this.getLikeListener);
+      await this.botService.queryListenerOff(this.getGenreListener);
     }
   };
+
+  getLikeListener = async (query: TelegramBot.CallbackQuery) => {
+  }
 }
