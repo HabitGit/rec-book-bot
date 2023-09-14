@@ -101,4 +101,11 @@ export class DatabaseService {
     }
     return this.genresRepository.createGenre(resultGenreArray);
   }
+
+  getPagination(page: number, size: number) {
+    const take: number = size ? size : 10;
+    const skip: number = page ? page * take : 0;
+
+    return { take, skip };
+  }
 }
