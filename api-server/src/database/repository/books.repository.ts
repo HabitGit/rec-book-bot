@@ -32,13 +32,13 @@ export class BooksRepository extends Repository<Books> {
   }
 
   async getBooks(findOptions: FindOptionsDto): Promise<[Books[], number]> {
-    const { take, skip, genreId } = findOptions;
-    console.log('Find opt.: ', findOptions);
+    const { take, skip, genreId, id } = findOptions;
     return this.findAndCount({
       take,
       skip,
       where: {
         genreId,
+        id,
       },
     });
   }

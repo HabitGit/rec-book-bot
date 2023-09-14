@@ -117,4 +117,12 @@ export class UsersRepository extends Repository<Users> {
     }
     return isUser;
   }
+
+  async getUserByUserId(userId: number): Promise<Users> {
+    return this.findOne({
+      where: {
+        userId: userId,
+      },
+    });
+  }
 }

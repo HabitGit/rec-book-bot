@@ -208,7 +208,7 @@ export class MessageController {
     } else {
       console.log('new query: ', query);
       const movie = await axios.get(
-        `${API_LINK}/books?page=0&size=1&genreId=${data}`,
+        `${API_LINK}/books?page=0&size=1&genreId=${data}&userId=${userId}`,
       );
       console.log('Movie pic: ', movie.data);
       await this.botService.sendPhoto(chatId!, movie.data[0][0].pictures, {

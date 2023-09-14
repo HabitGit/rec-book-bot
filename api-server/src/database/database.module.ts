@@ -8,6 +8,7 @@ import { UsersRepository } from './repository/users.repository';
 import { UsersGenresRepository } from './repository/users-genres.repository';
 import { DatabaseService } from './database.service';
 import { DatabaseController } from './database.controller';
+import { UsersBooksRepository } from './repository/users-books.repository';
 
 @Module({
   imports: [TypeOrmModule.forRoot(DB_OPTIONS)],
@@ -18,6 +19,7 @@ import { DatabaseController } from './database.controller';
     UsersRepository,
     UsersGenresRepository,
     DatabaseService,
+    UsersBooksRepository,
   ],
   exports: [
     UsersRepository,
@@ -25,6 +27,7 @@ import { DatabaseController } from './database.controller';
     GenresRepository,
     BooksRepository,
     DatabaseService,
+    UsersBooksRepository,
   ],
   controllers: [DatabaseController],
 })
