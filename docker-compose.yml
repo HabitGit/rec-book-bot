@@ -29,3 +29,15 @@ services:
       - /api-server/node_modules
     ports:
       - ${API_PORT_OUTSIDE}:3000
+
+  bot-server:
+    container_name: bot-server
+    build: ./bot-server
+    env_file:
+      - .env
+    depends_on:
+      - rec_book_bot_database
+      - api-server
+    volumes:
+      - ./bot-server/:/app
+      - /bot-server/node_modules
