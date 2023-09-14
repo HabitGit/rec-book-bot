@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DatabaseController } from './database.controller';
+import { DatabaseController } from '../database.controller';
 
 describe('DatabaseController', () => {
   let controller: DatabaseController;
