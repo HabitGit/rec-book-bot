@@ -9,6 +9,7 @@ import { AuthorsRepository } from './repository/authors.repository';
 import { BooksRepository } from './repository/books.repository';
 import { Authors } from './entitys/authors.entity';
 import * as path from 'path';
+import { GenresQueryDto } from '../books/dto/genres.gto';
 
 @Injectable()
 export class DatabaseService {
@@ -102,8 +103,9 @@ export class DatabaseService {
     return this.genresRepository.createGenre(resultGenreArray);
   }
 
-  getPagination(page: number, size: number) {
-    const take: number = size ? size : 10;
+  getPagination(params: GenresQueryDto) {
+    const { size, page } = params;
+    const take: number = size ? +size : 10;
     const skip: number = page ? page * take : 0;
 
     return { take, skip };

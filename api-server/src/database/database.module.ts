@@ -19,7 +19,7 @@ import { DatabaseController } from './database.controller';
     UsersGenresRepository,
     DatabaseService,
   ],
-  exports: [UsersRepository, UsersGenresRepository, GenresRepository, BooksRepository],
+  exports: [UsersRepository, UsersGenresRepository, GenresRepository, BooksRepository, DatabaseService],
   controllers: [DatabaseController],
 })
 export class DatabaseModule {}

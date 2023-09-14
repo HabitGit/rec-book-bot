@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { Genres } from '../entitys/genres.entity';
-import { CreateGenreDto } from '../dto/genres.dto';
+import { CreateGenreDto, GenresFindOptionsDto } from '../dto/genres.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -33,5 +33,13 @@ export class GenresRepository extends Repository<Genres> {
         }
       }
     }
+  }
+
+  async getAllGenres(findOptions: GenresFindOptionsDto): Promise<Genres[]> {
+    const { take, skip } = findOptions;
+    return this.find({
+      take,
+      skip,
+    });
   }
 }
