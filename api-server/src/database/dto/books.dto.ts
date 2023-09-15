@@ -80,6 +80,4 @@ export class LikeOptionsDto {
   type: boolean;
   @IsInt()
   userId: number;
-  @IsInt()
-  genreId: number;
 }

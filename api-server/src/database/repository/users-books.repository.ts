@@ -11,7 +11,19 @@ export class UsersBooksRepository extends Repository<UsersBooks> {
   }
 
   async addLikeByBook(user: Users, book: Books, preference: boolean) {
-    await this.save({
+    const isLike: UsersBooks | null = await this.findOne({
+      where: {
+        user: { id: user.id },
+        book: { id: book.id },
+      },
+    });
+    if (isLike) {
+      return this.save({
+        ...isLike,
+        preference: preference,
+      });
+    }
+    return this.save({
       user,
       book,
       preference,

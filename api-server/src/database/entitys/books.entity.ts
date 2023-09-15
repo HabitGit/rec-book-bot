@@ -68,7 +68,7 @@ export class Books {
   authors: Authors[];
 
   @OneToMany(() => UsersBooks, (userBook) => userBook.book)
-  users: Users[];
+  users: UsersBooks[];
 
   @CreateDateColumn()
   createdAt: Date;

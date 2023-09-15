@@ -20,12 +20,17 @@ export class UsersGenresRepository extends Repository<UsersGenres> {
   // }
 
   async createPreference(user: Users, genre: Genres) {
-    const isPreference: UsersGenres | null = await this.findOne({
+    const isPreference = await this.findOne({
       where: {
-        user: user,
+        user: { id: user.id },
+        genre: { id: genre.id },
       },
     });
     if (isPreference) {
+      await this.save({
+        ...isPreference,
+        preferenceLevel: isPreference.preferenceLevel + 1,
+      });
       throw new HttpException(
         'Такая статистика уже существует',
         HttpStatus.BAD_REQUEST,

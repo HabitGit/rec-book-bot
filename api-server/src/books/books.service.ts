@@ -9,6 +9,7 @@ import { UsersGenresRepository } from '../database/repository/users-genres.repos
 import { Users } from '../database/entitys/users.entity';
 import { UsersRepository } from '../database/repository/users.repository';
 import { UsersBooksRepository } from '../database/repository/users-books.repository';
+import { Books } from '../database/entitys/books.entity';
 
 @Injectable()
 export class BooksService {
@@ -27,17 +28,18 @@ export class BooksService {
   }
 
   async getBooks(params: BooksQueryDto) {
-    // Создание статистики жанров если ее нет
     const genre: Genres = await this.genresRepository.getGenreByCodOrId(
-      params.genreId,
+      +params.genreId,
     );
     const user: Users = await this.usersRepository.getUserByUserId(
       params.userId,
     );
+    //Создаем статистику жанра если ее еще нет
     try {
       await this.usersGenresRepository.createPreference(user, genre);
     } catch (e) {
       console.log(e);
+      //Нужно дописать проверку на ошибку
     }
 
     const { take, skip } = this.databaseService.getPagination({
@@ -52,16 +54,13 @@ export class BooksService {
   }
 
   async setLike(bookId: number, likeData: LikeOptionsDto) {
-    //Добавляет статистику жанру
     const user: Users = await this.usersRepository.getUserByUserId(
       likeData.userId,
     );
-    const genre: Genres = await this.genresRepository.getGenreByCodOrId(
-      likeData.genreId,
-    );
-    const book = await this.booksRepository.getBooks({ id: bookId });
-    await this.usersGenresRepository.addLikeByUser(user, genre);
-    await this.usersBooksRepository.addLikeByBook(
+    const book: [Books[], number] = await this.booksRepository.getBooks({
+      id: bookId,
+    });
+    return this.usersBooksRepository.addLikeByBook(
       user,
       book[0][0],
       likeData.type,
