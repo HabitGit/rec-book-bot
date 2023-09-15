@@ -158,6 +158,7 @@ export class MessageController {
         });
 
       case 'Подборка книг':
+        await this.botService.queryListenerOff(this.getGenreListener);
         const genres = await axios.get(
           `${API_LINK}/books/genres?page=0&size=10`,
         );
@@ -198,7 +199,36 @@ export class MessageController {
       for (const genre of genres.data) {
         keyboard.push([{ text: genre.name, callback_data: genre.id }]);
       }
-      keyboard.push([{ text: 'Еще...', callback_data: `more${index}` }]);
+      keyboard.push([
+        { text: 'Еще...', callback_data: `more${index}` },
+        { text: 'Назад...', callback_data: `back${index - 1}` },
+      ]);
+
+      await this.botService.sendMessage(chatId!, 'Выберите жанр', {
+        reply_markup: {
+          inline_keyboard: keyboard,
+        },
+      });
+    } else if (data?.slice(0, 4) === 'back') {
+      console.log('More work: ', data);
+      const index: number = +data.slice(4, 5);
+      console.log('INDEX: ', index === 0);
+      const genres = await axios.get(
+        `${API_LINK}/books/genres?page=${index}&size=10`,
+      );
+
+      const keyboard = [];
+      for (const genre of genres.data) {
+        keyboard.push([{ text: genre.name, callback_data: genre.id }]);
+      }
+      keyboard.push(
+        index == 0
+          ? [{ text: 'Еще...', callback_data: `more${index}` }]
+          : [
+              { text: 'Еще...', callback_data: `more${index}` },
+              { text: 'Назад...', callback_data: `back${index - 1}` },
+            ],
+      );
 
       await this.botService.sendMessage(chatId!, 'Выберите жанр', {
         reply_markup: {
@@ -206,25 +236,31 @@ export class MessageController {
         },
       });
     } else {
-      console.log('new query: ', query);
       const movie = await axios.get(
         `${API_LINK}/books?page=0&size=1&genreId=${data}&userId=${userId}`,
       );
       console.log('Movie pic: ', movie.data);
       await this.botService.sendPhoto(chatId!, movie.data[0][0].pictures, {
         caption: `***${movie.data[0][0].title} ${movie.data[0][0].date} года***\n[Литрес](${movie.data[0][0].url})`,
-        parse_mode: 'MarkdownV2',
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
             [
-              { text: 'like', callback_data: `like,0,${data}` },
-              { text: 'dislike', callback_data: `dislike,0,${data}` },
+              {
+                text: 'like',
+                callback_data: `like,0,${movie.data[0][0].id},${data}`,
+              },
+              {
+                text: 'dislike',
+                callback_data: `dislike,0,${movie.data[0][0].id},${data}`,
+              },
             ],
+            [{ text: 'Вернуться к жанрам', callback_data: 'back' }],
           ],
         },
       });
-      await this.botService.queryListenerOn(this.getLikeListener);
       await this.botService.queryListenerOff(this.getGenreListener);
+      await this.botService.queryListenerOn(this.getLikeListener);
     }
   };
 
@@ -233,14 +269,98 @@ export class MessageController {
 
     const like = data?.split(',')[0],
       page = data?.split(',')[1],
-      genreId = data?.split(',')[2];
+      bookId = data?.split(',')[2],
+      genreId = data?.split(',')[3];
+    console.log('DATA: ', data);
 
     switch (like) {
       case 'like':
-        console.log('заглушка');
+        const movie = await axios.get(
+          `${API_LINK}/books?page=${
+            +page! + 1
+          }&size=1&genreId=${genreId}&userId=${userId}`,
+        );
+        await axios.post(`${API_LINK}/books/${bookId}`, {
+          type: true,
+          userId: userId,
+        });
+        await this.botService.sendPhoto(chatId!, movie.data[0][0].pictures, {
+          caption: `***${movie.data[0][0].title} ${movie.data[0][0].date} года***\n[Литрес](${movie.data[0][0].url})`,
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: 'like',
+                  callback_data: `like,${+page! + 1},${
+                    movie.data[0][0].id
+                  },${genreId}`,
+                },
+                {
+                  text: 'dislike',
+                  callback_data: `dislike,${+page! + 1},${
+                    movie.data[0][0].id
+                  },${genreId}`,
+                },
+              ],
+              [{ text: 'Вернуться к жанрам', callback_data: 'back' }],
+            ],
+          },
+        });
         break;
       case 'dislike':
-        console.log('заглушка');
+        const movie2 = await axios.get(
+          `${API_LINK}/books?page=${
+            +page! + 1
+          }&size=1&genreId=${genreId}&userId=${userId}`,
+        );
+        await axios.post(`${API_LINK}/books/${bookId}`, {
+          type: false,
+          userId: userId,
+        });
+        await this.botService.sendPhoto(chatId!, movie2.data[0][0].pictures, {
+          caption: `***${movie2.data[0][0].title} ${movie2.data[0][0].date} года***\n[Литрес](${movie2.data[0][0].url})`,
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: 'like',
+                  callback_data: `like,${+page! + 1},${
+                    movie2.data[0][0].id
+                  },${genreId}`,
+                },
+                {
+                  text: 'dislike',
+                  callback_data: `dislike,${+page! + 1},${
+                    movie2.data[0][0].id
+                  },${genreId}`,
+                },
+              ],
+              [{ text: 'Вернуться к жанрам', callback_data: 'back' }],
+            ],
+          },
+        });
+        break;
+
+      case 'back':
+        await this.botService.queryListenerOff(this.getGenreListener);
+        const genres = await axios.get(
+          `${API_LINK}/books/genres?page=0&size=10`,
+        );
+
+        const keyboard = [];
+        for (const genre of genres.data) {
+          keyboard.push([{ text: genre.name, callback_data: genre.id }]);
+        }
+        keyboard.push([{ text: 'Еще...', callback_data: `more0` }]);
+
+        await this.botService.sendMessage(chatId!, 'Выберите жанр', {
+          reply_markup: {
+            inline_keyboard: keyboard,
+          },
+        });
+        await this.botService.queryListenerOn(this.getGenreListener);
         break;
     }
   };
