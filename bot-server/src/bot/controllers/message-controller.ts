@@ -7,6 +7,16 @@ import { UsersService } from '../../users/users.service';
 // const API_LINK = 'http://localhost:3000';
 const API_LINK = 'http://api-server:3000';
 
+type FriendDto = {
+  id: number;
+  userId: string;
+  chatId: string;
+  name: string;
+  inviteLink: string;
+  createdAt: string;
+  updateAt: string;
+};
+
 export class MessageController {
   constructor(
     private helper: Helper,
@@ -133,19 +143,20 @@ export class MessageController {
             type: 'friends',
           },
         );
-        console.log('Friends: ', friends);
         if (friends.data.friends.length === 0) {
           return this.botService.sendMessage(
             chatId,
             'Вы еще не добавили друзей',
           );
         }
-        for (const friend of friends.data.friends) {
-          console.log(friend);
-          /**
-           * Тут будет код с друзьями
-           */
-        }
+
+        const friendsName = friends.data.friends.map((friend: FriendDto) => {
+          return friend.name;
+        });
+        return this.botService.sendMessage(
+          chatId,
+          `Ваши друзья:\n${friendsName.join('\n')}`,
+        );
         break;
 
       case 'Назад':
@@ -179,9 +190,55 @@ export class MessageController {
     }
 
     await this.botService.inviteListener(
-      (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
+      async (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
         if (!match) return;
         console.log('match: ', match[1]);
+        // Проверяем юзера
+        try {
+          const isUser = await this.usersService.checkUser(userId);
+          if (isUser) {
+            return this.botService.sendMessage(
+              chatId,
+              `С возвращением ${userName}`,
+              {
+                reply_markup: {
+                  keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
+                  resize_keyboard: true,
+                },
+                parse_mode: 'Markdown',
+              },
+            );
+          }
+
+          const inviteLink = `https://t.me/${process.env.BOT_NAME}?start=id${userId}`;
+          const userData = {
+            userId: userId,
+            chatId: chatId,
+            name: userName,
+            inviteLink: inviteLink,
+          };
+          await axios.post(`${API_LINK}/users/registration`, userData);
+
+          //Добавляем в друзья
+          await axios.post(`${API_LINK}/users/profile/friends`, {
+            userId: userId,
+            friendId: +match[1].split('id')[1],
+          });
+
+          return this.botService.sendMessage(
+            chatId,
+            `Добро пожаловать ${userName}!`,
+            {
+              reply_markup: {
+                keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
+                resize_keyboard: true,
+              },
+              parse_mode: 'Markdown',
+            },
+          );
+        } catch (e) {
+          console.log('[-]Mess.controller, start', e);
+        }
       },
     );
   };
