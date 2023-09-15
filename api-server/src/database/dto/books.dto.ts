@@ -62,9 +62,13 @@ export class BookParseDto {
 }
 
 export class BooksQueryDto {
+  @IsInt()
   page: number;
+  @IsInt()
   size: number;
+  @IsInt()
   genreId: number;
+  @IsInt()
   userId: number;
 }
 
