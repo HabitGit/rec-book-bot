@@ -7,6 +7,7 @@ pg_data
 
 /api-server/node_modules
 /api-server/dist
+/api-server/dumpdb
 
 /database/source/maingenres.txt
 /database/source/result.json
