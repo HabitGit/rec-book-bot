@@ -1,5 +1,5 @@
 import { Authors } from '../entitys/authors.entity';
-import { IsBoolean, IsEnum, IsIn, IsInt } from 'class-validator';
+import { IsBoolean, IsInt } from 'class-validator';
 
 export class CreateBookDto {
   litresId: number;
