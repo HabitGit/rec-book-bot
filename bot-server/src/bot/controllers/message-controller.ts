@@ -4,18 +4,7 @@ import { BotService } from '../bot.service';
 import axios from 'axios';
 import { UsersService } from '../../users/users.service';
 
-// const API_LINK = 'http://localhost:3000';
-const API_LINK = 'http://api-server:3000';
-
-type FriendDto = {
-  id: number;
-  userId: string;
-  chatId: string;
-  name: string;
-  inviteLink: string;
-  createdAt: string;
-  updateAt: string;
-};
+const API_LINK = process.env.API_LINK;
 
 export class MessageController {
   constructor(
@@ -38,135 +27,16 @@ export class MessageController {
         'Вашего аккаунта не существует',
       );
     }
+
     switch (message) {
       case '/start':
-        // Проверяем юзера
-        try {
-          const isUser = await this.usersService.checkUser(userId);
-          if (isUser) {
-            return this.botService.sendMessage(
-              chatId,
-              `С возвращением ${userName}`,
-              {
-                reply_markup: {
-                  keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-                  resize_keyboard: true,
-                },
-                parse_mode: 'Markdown',
-              },
-            );
-          }
-
-          const inviteLink = `https://t.me/${process.env.BOT_NAME}?start=id${userId}`;
-          const userData = {
-            userId: userId,
-            chatId: chatId,
-            name: userName,
-            inviteLink: inviteLink,
-          };
-          await axios.post(`${API_LINK}/users/registration`, userData);
-          return this.botService.sendMessage(
-            chatId,
-            `Добро пожаловать ${userName}!`,
-            {
-              reply_markup: {
-                keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-                resize_keyboard: true,
-              },
-              parse_mode: 'Markdown',
-            },
-          );
-        } catch (e) {
-          console.log('[-]Mess.controller, start', e);
-        }
-        break;
+        return this.usersService.userRegistration({ userId, chatId, userName });
 
       case 'Профиль':
-        try {
-          const profile = await axios.post(
-            `${API_LINK}/users/profile/${userId}`,
-            { type: 'profile' },
-          );
-          console.log('Profile: ', profile.data);
-          return this.botService.sendMessage(
-            chatId,
-            `***Мой профиль:***\nИмя: ${profile.data.name}.\nЛюбимый жанр: ${
-              profile.data.preferenceGenre.length > 0
-                ? profile.data.preferenceGenre
-                : 'еще нету'
-            }.\n[Инвайт ссылка](${profile.data.inviteLink})`,
-            {
-              reply_markup: {
-                keyboard: [
-                  [{ text: 'Мои книги' }, { text: 'Мои друзья' }],
-                  [{ text: 'Назад' }],
-                ],
-                resize_keyboard: true,
-              },
-              parse_mode: 'Markdown',
-              disable_web_page_preview: true,
-            },
-          );
-        } catch (e) {
-          console.log(e);
-        }
-        break;
-
-      case 'Мои книги':
-        try {
-          const books = await axios.post(
-            `${API_LINK}/users/profile/${userId}`,
-            { type: 'books' },
-          );
-          console.log('BOOKS: ', books);
-          if (books.data.likes.length === 0) {
-            return this.botService.sendMessage(
-              chatId,
-              'Еще нет ни одной книги',
-            );
-          }
-          for (const book of books.data.likes) {
-            console.log(book);
-            /**
-             * Тут будет код перечисления книг. Нужна пагинация;
-             */
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        break;
-
-      case 'Мои друзья':
-        const friends = await axios.post(
-          `${API_LINK}/users/profile/${userId}`,
-          {
-            type: 'friends',
-          },
+        await this.usersService.getProfile({ userId, chatId });
+        return this.botService.messageListenerOn(
+          this.usersService.profileListener,
         );
-        if (friends.data.friends.length === 0) {
-          return this.botService.sendMessage(
-            chatId,
-            'Вы еще не добавили друзей',
-          );
-        }
-
-        const friendsName = friends.data.friends.map((friend: FriendDto) => {
-          return friend.name;
-        });
-        return this.botService.sendMessage(
-          chatId,
-          `Ваши друзья:\n${friendsName.join('\n')}`,
-        );
-        break;
-
-      case 'Назад':
-        return this.botService.sendMessage(chatId, `Главное меню:`, {
-          reply_markup: {
-            keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-            resize_keyboard: true,
-          },
-          parse_mode: 'Markdown',
-        });
 
       case 'Подборка книг':
         await this.botService.queryListenerOff(this.getGenreListener);

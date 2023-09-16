@@ -29,7 +29,7 @@ export class Main {
 const helper = new Helper();
 const configService = new ConfigEnv();
 const botService = new BotService(configService);
-const usersService = new UsersService();
+const usersService = new UsersService(botService, helper);
 const messageController = new MessageController(
   helper,
   botService,
