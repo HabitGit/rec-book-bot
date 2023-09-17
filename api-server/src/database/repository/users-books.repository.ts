@@ -29,4 +29,17 @@ export class UsersBooksRepository extends Repository<UsersBooks> {
       preference,
     });
   }
+
+  async getLikesBooks(userId: number, params: { take: number; skip: number }) {
+    const { take, skip } = params;
+    return this.findAndCount({
+      relations: { book: true },
+      where: {
+        preference: true,
+        user: { userId: userId },
+      },
+      take,
+      skip,
+    });
+  }
 }

@@ -36,4 +36,12 @@ export class BooksController {
   ) {
     return this.booksService.setLike(bookId, likeData);
   }
+
+  @Get('/:id')
+  async getLikesBooks(
+    @Param('id', ParseIntPipe) userId: number,
+    @Query() params: { page: number; size: number },
+  ) {
+    return this.booksService.getLikesBooks(userId, params);
+  }
 }

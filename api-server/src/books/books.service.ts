@@ -66,4 +66,9 @@ export class BooksService {
       likeData.type,
     );
   }
+
+  async getLikesBooks(userId: number, params: { page: number; size: number }) {
+    const { take, skip } = this.databaseService.getPagination(params);
+    return this.usersBooksRepository.getLikesBooks(userId, { take, skip });
+  }
 }
