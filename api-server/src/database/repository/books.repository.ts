@@ -43,4 +43,10 @@ export class BooksRepository extends Repository<Books> {
       },
     });
   }
+
+  async getBookById(bookId: number) {
+    return this.findOne({
+      where: { id: bookId },
+    });
+  }
 }

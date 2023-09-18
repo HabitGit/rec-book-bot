@@ -35,9 +35,9 @@ export class GenresRepository extends Repository<Genres> {
     }
   }
 
-  async getAllGenres(findOptions: GenresFindOptionsDto): Promise<Genres[]> {
+  async getAllGenres(findOptions: GenresFindOptionsDto) {
     const { take, skip } = findOptions;
-    return this.find({
+    return this.findAndCount({
       take,
       skip,
     });

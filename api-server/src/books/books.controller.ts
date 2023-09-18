@@ -19,7 +19,7 @@ export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Get('/genres')
-  async getGenres(@Query() params: GenresQueryDto): Promise<Genres[]> {
+  async getGenres(@Query() params: GenresQueryDto) {
     console.log('API, CONTROLLER: ', params);
     return this.booksService.getGenres(params);
   }
@@ -37,11 +37,16 @@ export class BooksController {
     return this.booksService.setLike(bookId, likeData);
   }
 
-  @Get('/:id')
+  @Get('/user/:id')
   async getLikesBooks(
     @Param('id', ParseIntPipe) userId: number,
     @Query() params: { page: number; size: number },
   ) {
     return this.booksService.getLikesBooks(userId, params);
+  }
+
+  @Get('/:id')
+  async getBookById(@Param('id', ParseIntPipe) bookId: number) {
+    return this.booksService.getBookById(bookId);
   }
 }

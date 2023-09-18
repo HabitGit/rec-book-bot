@@ -87,19 +87,15 @@ export class UsersRepository extends Repository<Users> {
   }
 
   async getUserLikesBooks(userId: number) {
-    const isUser: Users | null = await this.findOne({
-      relations: { likes: true },
+    return this.findOne({
+      relations: { likes: { book: true } },
       where: {
         userId: userId,
+        likes: {
+          preference: true,
+        },
       },
     });
-    if (!isUser) {
-      throw new HttpException(
-        'Юзер не зарегистрирован',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    return isUser;
   }
 
   async getUserFriends(userId: number) {

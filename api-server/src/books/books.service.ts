@@ -22,7 +22,7 @@ export class BooksService {
     private usersBooksRepository: UsersBooksRepository,
   ) {}
 
-  async getGenres(params: GenresQueryDto): Promise<Genres[]> {
+  async getGenres(params: GenresQueryDto) {
     const { take, skip } = this.databaseService.getPagination(params);
     return this.genresRepository.getAllGenres({ take, skip });
   }
@@ -70,5 +70,9 @@ export class BooksService {
   async getLikesBooks(userId: number, params: { page: number; size: number }) {
     const { take, skip } = this.databaseService.getPagination(params);
     return this.usersBooksRepository.getLikesBooks(userId, { take, skip });
+  }
+
+  async getBookById(bookId: number) {
+    return this.booksRepository.getBookById(bookId);
   }
 }

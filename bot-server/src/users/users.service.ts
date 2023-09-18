@@ -5,87 +5,22 @@ import {
   MessageTypeEnum,
 } from '../templates/messages.template';
 import { Keyboard } from '../bot/keybords/keyboards';
-import { IFriend, IGenreData, IUserRegistrationData } from '../templates/interfaces';
-import TelegramBot from 'node-telegram-bot-api';
-import { Helper } from '../templates/helper';
+import {
+  IFriend,
+  IGenreData,
+  IUserRegistrationData,
+} from '../templates/interfaces';
+import { BooksService } from '../books/books.service';
+import { BooksQueryController } from '../books/books-query.controller';
 
 const API_LINK = 'http://api-server:3000';
 
 export class UsersService {
   constructor(
     private botService: BotService,
-    private helper: Helper,
+    private booksService: BooksService,
+    private booksQueryController: BooksQueryController,
   ) {}
-
-  profileListener = async (msg: TelegramBot.Message) => {
-    const {
-      chatId,
-      userName = 'Anonymous',
-      userId,
-      message,
-    } = this.helper.getUserPoints(msg);
-
-    switch (message) {
-      case 'Мои книги':
-        try {
-          const { data: books } = await axios.post(
-            `${API_LINK}/users/profile/${userId}`,
-            { type: 'books' },
-          );
-
-          console.log('BOOKS: ', books);
-          const noBooksMessage: string = MessageGenerator({
-            type: MessageTypeEnum.noBooks,
-          });
-
-          if (books.likes.length === 0) {
-            return this.botService.sendMessage(chatId, noBooksMessage);
-          }
-
-          for (const book of books.likes) {
-            console.log('BOOK', book);
-            /**
-             * Тут будет код перечисления книг. Нужна пагинация;
-             */
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        break;
-      case 'Мои друзья':
-        const friends = await axios.post(
-          `${API_LINK}/users/profile/${userId}`,
-          {
-            type: 'friends',
-          },
-        );
-        if (friends.data.friends.length === 0) {
-          return this.botService.sendMessage(
-            chatId,
-            'Вы еще не добавили друзей',
-          );
-        }
-
-        const friendsName = friends.data.friends.map((friend: IFriend) => {
-          return friend.name;
-        });
-        return this.botService.sendMessage(
-          chatId,
-          `Ваши друзья:\n${friendsName.join('\n')}`,
-        );
-        break;
-      case 'Назад':
-        await this.botService.messageListenerOff(this.profileListener);
-        return this.botService.sendMessage(chatId, `Главное меню:`, {
-          reply_markup: {
-            keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-            resize_keyboard: true,
-          },
-          parse_mode: 'Markdown',
-        });
-        break;
-    }
-  };
 
   async userRegistration(data: {
     userId: number;
@@ -168,10 +103,75 @@ export class UsersService {
         reply_markup: {
           keyboard: Keyboard.profilePage,
           resize_keyboard: true,
+          one_time_keyboard: true,
         },
         parse_mode: 'Markdown',
         disable_web_page_preview: true,
       });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getMyBooks(userId: number, chatId: number) {
+    try {
+      const { data: books } = await axios.get(
+        `${API_LINK}/books/user/${userId}?page=0&size=10`,
+      );
+
+      if (books[0].length === 0) {
+        const noBooksMessage: string = MessageGenerator({
+          type: MessageTypeEnum.noBooks,
+        });
+        return this.botService.sendMessage(chatId, noBooksMessage);
+      }
+
+      const keyboard = [];
+      for (const book of books[0]) {
+        keyboard.push([
+          { text: book.book.title, callback_data: `book,${book.book.id}` },
+        ]);
+      }
+      if (keyboard.length === 10) {
+        keyboard.push([{ text: 'Еще...', callback_data: `more,0` }]);
+      }
+
+      await this.botService.queryListenerOff(
+        this.booksQueryController.myBooksListener,
+      );
+      await this.botService.queryListenerOn(
+        this.booksQueryController.myBooksListener,
+      );
+      return this.botService.sendMessage(chatId, 'Ваши книги', {
+        reply_markup: {
+          inline_keyboard: keyboard,
+          resize_keyboard: true,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getMyFriends(userId: number, chatId: number) {
+    try {
+      const { data: friends } = await axios.post(
+        `${API_LINK}/users/profile/${userId}`,
+        {
+          type: 'friends',
+        },
+      );
+      if (friends.friends.length === 0) {
+        return this.botService.sendMessage(chatId, 'Вы еще не добавили друзей');
+      }
+
+      const friendsName = friends.friends.map((friend: IFriend) => {
+        return friend.name;
+      });
+      return this.botService.sendMessage(
+        chatId,
+        `Ваши друзья:\n${friendsName.join('\n')}`,
+      );
     } catch (e) {
       console.log(e);
     }
