@@ -1,13 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { Helper } from '../templates/helper';
 import { BotService } from './bot.service';
-import axios from 'axios';
 import { UsersService } from '../users/users.service';
 import { UsersMessageController } from '../users/users-message.controller';
 import { BooksQueryController } from '../books/books-query.controller';
 import { BooksService } from '../books/books.service';
-
-const API_LINK = process.env.API_LINK;
 
 export class BotMessageController {
   constructor(
@@ -57,58 +54,27 @@ export class BotMessageController {
           this.booksQueryController.getGenreListener,
         );
     }
+  };
 
-    await this.botService.inviteListener(
-      async (msg: TelegramBot.Message, match: RegExpExecArray | null) => {
-        if (!match) return;
-        console.log('match: ', match[1]);
-        // Проверяем юзера
-        try {
-          const isUser = await this.usersService.checkUser(userId);
-          if (isUser) {
-            return this.botService.sendMessage(
-              chatId,
-              `С возвращением ${userName}`,
-              {
-                reply_markup: {
-                  keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-                  resize_keyboard: true,
-                },
-                parse_mode: 'Markdown',
-              },
-            );
-          }
+  userInviteListener = async (
+    msg: TelegramBot.Message,
+    match: RegExpExecArray | null,
+  ) => {
+    if (!match) return;
+    const {
+      chatId,
+      userId,
+      userName = 'Anonymous',
+    } = this.helper.getUserPoints(msg);
 
-          const inviteLink = `https://t.me/${process.env.BOT_NAME}?start=id${userId}`;
-          const userData = {
-            userId: userId,
-            chatId: chatId,
-            name: userName,
-            inviteLink: inviteLink,
-          };
-          await axios.post(`${API_LINK}/users/registration`, userData);
-
-          //Добавляем в друзья
-          await axios.post(`${API_LINK}/users/profile/friends`, {
-            userId: userId,
-            friendId: +match[1].split('id')[1],
-          });
-
-          return this.botService.sendMessage(
-            chatId,
-            `Добро пожаловать ${userName}!`,
-            {
-              reply_markup: {
-                keyboard: [[{ text: 'Подборка книг' }, { text: 'Профиль' }]],
-                resize_keyboard: true,
-              },
-              parse_mode: 'Markdown',
-            },
-          );
-        } catch (e) {
-          console.log('[-]Mess.controller, start', e);
-        }
-      },
-    );
+    if (!userId) {
+      return this.botService.sendMessage(
+        chatId,
+        'Вашего аккаунта не существует',
+      );
+    }
+    await this.usersService.userRegistration({ userId, chatId, userName });
+    const friendId: number = +match[1].split('id')[1];
+    return this.usersService.addFriend(userId, friendId);
   };
 }

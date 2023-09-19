@@ -10,7 +10,6 @@ import {
   IGenreData,
   IUserRegistrationData,
 } from '../templates/interfaces';
-import { BooksService } from '../books/books.service';
 import { BooksQueryController } from '../books/books-query.controller';
 
 const API_LINK = 'http://api-server:3000';
@@ -18,7 +17,6 @@ const API_LINK = 'http://api-server:3000';
 export class UsersService {
   constructor(
     private botService: BotService,
-    private booksService: BooksService,
     private booksQueryController: BooksQueryController,
   ) {}
 
@@ -199,5 +197,16 @@ export class UsersService {
       throw new Error(`Неизвестная ошибка: ${e}`);
     }
     return false;
+  }
+
+  async addFriend(userId: number, friendId: number) {
+    try {
+      await axios.post(`${API_LINK}/users/profile/friends`, {
+        userId,
+        friendId,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

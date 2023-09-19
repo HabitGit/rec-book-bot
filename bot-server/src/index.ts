@@ -23,8 +23,12 @@ export class Main {
 
   async botOn() {
     await this.botService.setMyCommands(Commands);
+
     await this.botService.messageListenerOn(
       this.messageController.requestHandler,
+    );
+    await this.botService.inviteListener(
+      this.messageController.userInviteListener,
     );
   }
 }
@@ -38,11 +42,7 @@ const booksQueryController = new BooksQueryController(
   booksService,
   botService,
 );
-const usersService = new UsersService(
-  botService,
-  booksService,
-  booksQueryController,
-);
+const usersService = new UsersService(botService, booksQueryController);
 const usersMessageController = new UsersMessageController(
   botService,
   usersService,
