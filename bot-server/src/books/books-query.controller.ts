@@ -62,24 +62,22 @@ export class BooksQueryController {
 
     switch (like) {
       case 'like':
-        return this.booksService.addLikeOrDislike(
+        await this.booksService.addLikeOrDislike(bookId, userId, true);
+        return this.booksService.getNextBook(
           nextPage,
           genreId,
           userId,
           chatId!,
-          bookId,
-          true,
           query.message!.message_id,
         );
 
       case 'dislike':
-        return this.booksService.addLikeOrDislike(
+        await this.booksService.addLikeOrDislike(bookId, userId, false);
+        return this.booksService.getNextBook(
           nextPage,
           genreId,
           userId,
           chatId!,
-          bookId,
-          false,
           query.message!.message_id,
         );
 
@@ -95,6 +93,27 @@ export class BooksQueryController {
           'Больше нету фильмов данного жанра',
         );
         break;
+    }
+  };
+
+  getRandomBooksListener = async (query: TelegramBot.CallbackQuery) => {
+    const { data, chatId, userId } = this.helper.getUserPointsQuery(query);
+    const like: string = data!.split(',')[0],
+      bookId: number = +data!.split(',')[1],
+      i: number = +data!.split(',')[2];
+    console.log('[+]I: ', i, 'i / 3: ', i % 3);
+    console.log('DATA: ', data);
+
+    const isUserId: number | null = i % 7 === 0 ? userId : null;
+
+    switch (like) {
+      case 'like':
+        await this.booksService.addLikeOrDislike(bookId, userId, true);
+        return this.booksService.getNextRandomBook(isUserId, chatId!, i);
+
+      case 'dislike':
+        await this.booksService.addLikeOrDislike(bookId, userId, true);
+        return this.booksService.getNextRandomBook(isUserId, chatId!, i);
     }
   };
 }

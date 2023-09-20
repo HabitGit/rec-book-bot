@@ -129,27 +129,17 @@ export class BooksService {
     });
   }
 
-  async addLikeOrDislike(
+  async getNextBook(
     page: number,
     genreId: number,
     userId: number,
     chatId: number,
-    bookId: number,
-    likeType: boolean,
     messageId: number,
   ) {
     try {
-      await axios.post(`${API_LINK}/books/${bookId}`, {
-        type: likeType,
-        userId: userId,
-      });
-
       const { data: movie } = await axios.get(
         `${API_LINK}/books?page=${page}&size=1&genreId=${genreId}&userId=${userId}`,
       );
-
-      console.log('PAGE: ', page);
-      console.log('MOVIE COUNT: ', movie[1]);
 
       const callbackDataLike =
         page === +movie[1] - 1
@@ -185,7 +175,51 @@ export class BooksService {
     }
   }
 
-  getRandomBooks() {
+  async addLikeOrDislike(bookId: number, userId: number, likeType: boolean) {
+    try {
+      return axios.post(`${API_LINK}/books/${bookId}`, {
+        type: likeType,
+        userId: userId,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
+  async getNextRandomBook(userId: number | null, chatId: number, i: number) {
+    try {
+      i++
+      // Получаем рандомную книгу
+      const { data: movie } = await axios.get(
+        userId
+          ? `${API_LINK}/books/random?userId=${userId}`
+          : `${API_LINK}/books/random`,
+      );
+      console.log('MOVIE: ', movie);
+
+      const callbackDataLike = `like,${movie[0][0].id},${i}`;
+      const callbackDataDislike = `dislike,${movie[0][0].id},${i}`;
+
+      return this.botService.sendPhoto(chatId, movie[0][0].pictures, {
+        caption: `***${movie[0][0].title} ${movie[0][0].date} года***\n[Литрес](${movie[0][0].url})`,
+        parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: 'like',
+                callback_data: callbackDataLike,
+              },
+              {
+                text: 'dislike',
+                callback_data: callbackDataDislike,
+              },
+            ],
+          ],
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

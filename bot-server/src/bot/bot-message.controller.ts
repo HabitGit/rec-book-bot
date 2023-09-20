@@ -67,8 +67,13 @@ export class BotMessageController {
           this.booksQueryController.getGenresListener,
         );
       case 'рекомендациям':
-        console.log('рекомендациям, заглушка');
-        break;
+        await this.botService.queryListenerOff(
+          this.booksQueryController.getRandomBooksListener,
+        );
+        await this.booksService.getNextRandomBook(null, chatId, 1);
+        return this.botService.queryListenerOn(
+          this.booksQueryController.getRandomBooksListener,
+        );
     }
   };
 

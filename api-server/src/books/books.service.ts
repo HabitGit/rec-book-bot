@@ -92,6 +92,7 @@ export class BooksService {
     if (skip === count) {
       skip--;
     }
+    console.log('[+]RANDOM COUNT SKIP: ', skip);
 
     const findOptions = {
       take: 1,
