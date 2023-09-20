@@ -16,7 +16,7 @@ export class BooksQueryController {
     switch (data?.slice(0, 4)) {
       case 'book':
         const bookId: number = +data?.split(',')[1];
-        return this.booksService.getBook(bookId, chatId!);
+        return this.booksService.getBookById(bookId, chatId!);
 
       case 'more':
         const page: number = +data?.split(',')[1] + 1;
@@ -24,7 +24,7 @@ export class BooksQueryController {
     }
   };
 
-  getGenreListener = async (query: TelegramBot.CallbackQuery) => {
+  getGenresListener = async (query: TelegramBot.CallbackQuery) => {
     const { data, chatId, userId } = this.helper.getUserPointsQuery(query);
 
     if (data?.slice(0, 4) === 'more') {
@@ -42,7 +42,7 @@ export class BooksQueryController {
         query.message!.message_id,
       );
     } else {
-      await this.botService.queryListenerOff(this.getGenreListener);
+      await this.botService.queryListenerOff(this.getGenresListener);
       const genreId: number = +data!;
       await this.botService.deleteMessage(chatId!, query.message!.message_id);
       await this.booksService.getBookByGenre(genreId, userId, chatId!);
@@ -84,9 +84,9 @@ export class BooksQueryController {
         );
 
       case 'back':
-        await this.botService.queryListenerOff(this.getGenreListener);
+        await this.botService.queryListenerOff(this.getGenresListener);
         await this.booksService.getGenresStartPage(chatId!);
-        return this.botService.queryListenerOn(this.getGenreListener);
+        return this.botService.queryListenerOn(this.getGenresListener);
 
       case 'final':
         await this.botService.queryListenerOff(this.getLikeListener);

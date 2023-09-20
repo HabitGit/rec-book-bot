@@ -46,13 +46,29 @@ export class BotMessageController {
         );
 
       case 'Подборка книг':
+        await this.botService.sendMessage(
+          chatId,
+          'Будем выбирать по жанру или рекомендациям?',
+          {
+            reply_markup: {
+              keyboard: [[{ text: 'По жанру' }, { text: 'рекомендациям' }]],
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          },
+        );
+        break;
+      case 'По жанру':
         await this.botService.queryListenerOff(
-          this.booksQueryController.getGenreListener,
+          this.booksQueryController.getGenresListener,
         );
-        await this.booksService.getGenresStartPage(chatId);
+        await this.booksService.getGenresStartPage(chatId!);
         return this.botService.queryListenerOn(
-          this.booksQueryController.getGenreListener,
+          this.booksQueryController.getGenresListener,
         );
+      case 'рекомендациям':
+        console.log('рекомендациям, заглушка');
+        break;
     }
   };
 

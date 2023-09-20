@@ -6,7 +6,7 @@ const API_LINK = 'http://api-server:3000';
 export class BooksService {
   constructor(private botService: BotService) {}
 
-  async getBook(bookId: number, chatId: number) {
+  async getBookById(bookId: number, chatId: number) {
     try {
       const { data: book } = await axios.get(`${API_LINK}/books/${bookId}`);
 
@@ -183,5 +183,9 @@ export class BooksService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  getRandomBooks() {
+
   }
 }
