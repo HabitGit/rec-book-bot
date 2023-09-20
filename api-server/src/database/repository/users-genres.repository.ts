@@ -10,14 +10,17 @@ export class UsersGenresRepository extends Repository<UsersGenres> {
     super(UsersGenres, dataSource.createEntityManager());
   }
 
-  // async getTopGenreIdByUserId(userId: number): Promise<UsersGenres> {
-  //   const isGenre: UsersGenres | null = await this.findOne({
-  //     select: { genreId: true },
-  //     where: { userId: userId },
-  //   });
-  //   if (!isGenre) throw new Error('Такой юзер скорее всего не зарегистрирован');
-  //   return isGenre;
-  // }
+  async getTopGenreIdByUserId(userId: number) {
+    const maxPreferenceLevel: number = await this.maximum('preferenceLevel', {
+      user: { userId },
+    });
+    return this.findOne({
+      relations: { genre: true },
+      where: {
+        preferenceLevel: maxPreferenceLevel,
+      },
+    });
+  }
 
   async createPreference(user: Users, genre: Genres) {
     const isPreference = await this.findOne({

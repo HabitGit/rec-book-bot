@@ -1,5 +1,6 @@
 import { Authors } from '../entitys/authors.entity';
 import { IsBoolean, IsInt } from 'class-validator';
+import { UsersBooks } from '../entitys/users-books.entity';
 
 export class CreateBookDto {
   litresId: number;
@@ -77,6 +78,7 @@ export class FindOptionsDto {
   take?: number;
   skip?: number;
   genreId?: number;
+  users?: UsersBooks;
 }
 
 export class LikeOptionsDto {

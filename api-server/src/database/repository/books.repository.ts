@@ -32,7 +32,7 @@ export class BooksRepository extends Repository<Books> {
   }
 
   async getBooks(findOptions: FindOptionsDto): Promise<[Books[], number]> {
-    const { take, skip, genreId, id } = findOptions;
+    const { take, skip, genreId, id, users } = findOptions;
     return this.findAndCount({
       relations: { users: true },
       take,
@@ -40,6 +40,7 @@ export class BooksRepository extends Repository<Books> {
       where: {
         genreId,
         id,
+        users,
       },
     });
   }
@@ -47,6 +48,12 @@ export class BooksRepository extends Repository<Books> {
   async getBookById(bookId: number) {
     return this.findOne({
       where: { id: bookId },
+    });
+  }
+
+  async getBooksCount(findOptions: FindOptionsDto) {
+    return this.count({
+      where: { genreId: findOptions.genreId },
     });
   }
 }

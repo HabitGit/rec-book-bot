@@ -9,7 +9,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { Genres } from '../database/entitys/genres.entity';
 import { Books } from '../database/entitys/books.entity';
 import { GenresQueryDto } from '../database/dto/genres.dto';
 import { BooksQueryDto, LikeOptionsDto } from '../database/dto/books.dto';
@@ -24,17 +23,9 @@ export class BooksController {
     return this.booksService.getGenres(params);
   }
 
-  @Get()
-  async getBooks(@Query() params: BooksQueryDto): Promise<[Books[], number]> {
-    return this.booksService.getBooks(params);
-  }
-
-  @Post('/:id')
-  async setLike(
-    @Param('id', ParseIntPipe) bookId: number,
-    @Body(ValidationPipe) likeData: LikeOptionsDto,
-  ) {
-    return this.booksService.setLike(bookId, likeData);
+  @Get('/random')
+  async getRandomBook(@Query() params: { userId: number }) {
+    return this.booksService.getRandomBook(params);
   }
 
   @Get('/user/:id')
@@ -48,5 +39,20 @@ export class BooksController {
   @Get('/:id')
   async getBookById(@Param('id', ParseIntPipe) bookId: number) {
     return this.booksService.getBookById(bookId);
+  }
+
+  @Post('/:id')
+  async setLike(
+    @Param('id', ParseIntPipe) bookId: number,
+    @Body(ValidationPipe) likeData: LikeOptionsDto,
+  ) {
+    return this.booksService.setLike(bookId, likeData);
+  }
+
+  @Get()
+  async getBooksByGenre(
+    @Query() params: BooksQueryDto,
+  ): Promise<[Books[], number]> {
+    return this.booksService.getBooksByGenre(params);
   }
 }

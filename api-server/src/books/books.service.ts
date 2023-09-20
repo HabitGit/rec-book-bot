@@ -27,7 +27,7 @@ export class BooksService {
     return this.genresRepository.getAllGenres({ take, skip });
   }
 
-  async getBooks(params: BooksQueryDto) {
+  async getBooksByGenre(params: BooksQueryDto) {
     const genre: Genres = await this.genresRepository.getGenreByCodOrId(
       +params.genreId,
     );
@@ -74,5 +74,31 @@ export class BooksService {
 
   async getBookById(bookId: number) {
     return this.booksRepository.getBookById(bookId);
+  }
+
+  async getRandomBook(params: { userId: number }) {
+    let genreId = null;
+    if (params.userId) {
+      const genre = await this.usersGenresRepository.getTopGenreIdByUserId(
+        params.userId,
+      );
+      genreId = genre.genre.id;
+    }
+
+    const count: number = await this.booksRepository.getBooksCount({
+      genreId: genreId,
+    });
+    let skip = Math.floor(Math.random() * count + 1);
+    if (skip === count) {
+      skip--;
+    }
+
+    const findOptions = {
+      take: 1,
+      skip,
+      genreId: genreId,
+    };
+
+    return this.booksRepository.getBooks(findOptions);
   }
 }
