@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { Authors } from './authors.entity';
 import { UsersBooks } from './users-books.entity';
-import { Users } from './users.entity';
 
 @Entity()
 export class Books {
